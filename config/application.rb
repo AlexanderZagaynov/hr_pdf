@@ -9,5 +9,10 @@ Bundler.require *Rails.groups
 
 module HrPdf
   class Application < Rails::Application
+    config.generators do |g|
+      g.assets   = false
+      g.helper   = false
+      g.jbuilder = false
+    end
   end
 end
