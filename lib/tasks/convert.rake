@@ -18,7 +18,7 @@ task :convert, %i(filename) => %i(environment) do |task, args|
 
     begin
 
-      `#{lo_exe} --headless --convert-to odt --outdir #{workdir} #{filename}`
+      `#{lo_exe} --headless --convert-to odt:writer8 --outdir #{workdir} #{filename}`
       `unzip #{odt_file} content.xml -d #{workdir}`
 
       has_changes = false
