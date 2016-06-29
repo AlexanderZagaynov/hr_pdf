@@ -2,10 +2,7 @@ source 'https://rubygems.org'
 ruby '2.3.1'
 
 gem 'rails', '>= 5.0.0.rc2', '< 5.1'
-gem 'puma'
-gem 'sass-rails'
-gem 'uglifier'
-gem 'coffee-rails'
+gem 'nokogiri'
 
 group :development, :test do
   gem 'byebug', platform: :mri
