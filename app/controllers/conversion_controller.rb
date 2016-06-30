@@ -25,26 +25,32 @@ class ConversionController < ApplicationController
     pdf_file = WORK_DIR / "#{barename}.pdf"
 
     `#{LO_EXE} --invisible --convert-to odt:writer8 --outdir #{WORK_DIR} '#{filename}'`
-    `unzip '#{odt_file}' content.xml -d #{WORK_DIR}`
+
+    if odt_file.read(5) == '<?xml'
+      xml_file = odt_file
+    else
+      `unzip '#{odt_file}' content.xml -d #{WORK_DIR}`
+      xml_file = XML_FILE
+    end
 
     has_changes = false
 
-    doc = Nokogiri::XML XML_FILE.read
+    doc = Nokogiri::XML xml_file.read
     doc.xpath(XSUBS).each do |node|
       node.content = node.text.gsub RSUBS, REPLACEMENT
       has_changes ||= true
     end
 
     if has_changes
-      XML_FILE.open('w') { XML_FILE.write doc.to_xml }
-      `zip -mj '#{odt_file}' #{XML_FILE}`
+      xml_file.open('w') { xml_file.write doc.to_xml }
+      `zip -mj '#{odt_file}' #{XML_FILE}` if xml_file == XML_FILE
     end
 
     `#{LO_EXE} --headless --convert-to pdf --outdir #{WORK_DIR} '#{odt_file}'`
     send_data pdf_file.read, filename: File.basename(pdf_file)
 
   ensure
-    [XML_FILE, odt_file, pdf_file].each do |file|
+    [XML_FILE, odt_file, pdf_file, filename].each do |file|
       FileUtils.rm file if File.exist? file
     end
   end
