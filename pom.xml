@@ -21,7 +21,16 @@
               <excludeDefaultDirectories>true</excludeDefaultDirectories>
               <filesets>
                 <fileset>
-                  <directory>target/dependency/*.jar</directory>
+                  <directory>target</directory>
+                  <excludes>
+                    <exclude>*.war</exclude>
+                  </excludes>
+                </fileset>
+                <fileset>
+                  <directory>node_modules</directory>
+                </fileset>
+                <fileset>
+                  <directory>.heroku/node</directory>
                 </fileset>
               </filesets>
             </configuration>
